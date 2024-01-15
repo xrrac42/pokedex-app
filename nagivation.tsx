@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './screens/home/index';
 import Main from './screens/main';
 import Favorites from './screens/favorites';
+import PokemonDetail from './screens/pokemonDetail';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ const MainTabs = () => (
         ), headerShown: false
     
       }} />
+      
   </Tab.Navigator>
 );
 
@@ -34,6 +36,7 @@ const Navigation = () => {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
         <Stack.Screen name="MainTabs" component={MainTabs} options={{headerShown: false}} />
+        <Stack.Screen name= "PokemonDetail" component={PokemonDetail} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

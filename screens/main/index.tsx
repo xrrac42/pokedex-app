@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, ImageSourcePropType} from "react-native";
+import { View, Text, Image, ScrollView, ImageSourcePropType } from "react-native";
 import { Searchbar, Card, Title, Paragraph } from "react-native-paper";
+import { useNavigation } from '@react-navigation/native'; 
 import styles from "./styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { StackNavigationProp } from '@react-navigation/stack';
+import usePokemonDetails from "../../hooks/usePokemonDetails";
+
+
+
 
 interface Pokemon {
   id: number;
@@ -9,11 +16,18 @@ interface Pokemon {
   imageUrl: string;
 }
 
+type MainStackParamList = {
+  PokemonDetail: { id: number };
+}
+
+type  PokemonDetailScreenNavigationProp = StackNavigationProp<MainStackParamList, 'PokemonDetail'>;
+
 const Main: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
+  const navigation = useNavigation<PokemonDetailScreenNavigationProp>();
 
   useEffect(() => {
     const fetchPokemonData = async () => {
@@ -51,13 +65,17 @@ const Main: React.FC = () => {
     fetchPokemonData();
   }, [offset]);
 
+  const handlePress = (id: number) => {
+    navigation.navigate('PokemonDetail', { id });
+  };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setOffset(0); 
+    setOffset(0);
   };
 
   const handleLoadMore = () => {
-    setOffset((prevOffset) => prevOffset + 40); 
+    setOffset((prevOffset) => prevOffset + 40);
   };
 
   const renderPokemonCards = () => {
@@ -67,30 +85,34 @@ const Main: React.FC = () => {
         <View key={i} style={styles.cardRow}>
           <View style={styles.cardPokemon}>
             {pokemonList[i] && (
-              <Card style={styles.card}>
-                <Card.Content>
-                  <Image
-                    source={{ uri: pokemonList[i].imageUrl }}
-                    style={{ width: "100%", height: 80, resizeMode: "contain" }}
-                  />
-                  <Title>{pokemonList[i].name}</Title>
-                  <Paragraph>#{pokemonList[i].id}</Paragraph>
-                </Card.Content>
-              </Card>
+              <TouchableOpacity onPress={() => { handlePress(pokemonList[i].id); }}>
+                <Card style={styles.card}>
+                  <Card.Content>
+                    <Image
+                      source={{ uri: pokemonList[i].imageUrl }}
+                      style={{ width: "100%", height: 80, resizeMode: "contain" }}
+                    />
+                    <Title>{pokemonList[i].name}</Title>
+                    <Paragraph>#{pokemonList[i].id}</Paragraph>
+                  </Card.Content>
+                </Card>
+              </TouchableOpacity>
             )}
           </View>
           <View style={styles.cardPokemon}>
             {pokemonList[i + 1] && (
-              <Card style={styles.card}>
-                <Card.Content>
-                  <Image
-                    source={{ uri: pokemonList[i + 1].imageUrl }}
-                    style={{ width: "100%", height: 80, resizeMode: "contain" }}
-                  />
-                  <Title>{pokemonList[i + 1].name}</Title>
-                  <Paragraph>#{pokemonList[i + 1].id}</Paragraph>
-                </Card.Content>
-              </Card>
+              <TouchableOpacity onPress={() => handlePress(pokemonList[i + 1].id)}>
+                <Card style={styles.card}>
+                  <Card.Content>
+                    <Image
+                      source={{ uri: pokemonList[i + 1].imageUrl }}
+                      style={{ width: "100%", height: 80, resizeMode: "contain" }}
+                    />
+                    <Title>{pokemonList[i + 1].name}</Title>
+                    <Paragraph>#{pokemonList[i + 1].id}</Paragraph>
+                  </Card.Content>
+                </Card>
+              </TouchableOpacity>
             )}
           </View>
         </View>
@@ -111,7 +133,6 @@ const Main: React.FC = () => {
         onChangeText={handleSearch}
         value={searchQuery}
         style={styles.searchBar}
-        
       />
       {error ? (
         <Text style={{ color: "red" }}>{error}</Text>
@@ -121,6 +142,7 @@ const Main: React.FC = () => {
         </ScrollView>
       )}
     </View>
+  
   );
 };
 

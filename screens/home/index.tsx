@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SvgUri } from 'react-native-svg';
+
 
 type MainStackParamList = {
   MainTabs: undefined;
@@ -24,7 +24,7 @@ const Home: React.FC = () => {
     <View style={styles.container}>
 
       <StatusBar style="auto" />
-      <Image source={ pokeballImageUrl } style={{ width: 200, height: 200 }} />
+      <Image source={ pokeballImageUrl } style={{ width: 150, height: 150 }} />
       <Text style={styles.pokedexText}> Pokedex</Text>
       <TouchableOpacity
         style={styles.button}
