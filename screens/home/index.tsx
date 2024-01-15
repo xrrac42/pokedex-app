@@ -6,10 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type MainStackParamList = {
-  Main: undefined;
+  MainTabs: undefined;
 }
 
-type MainScreenNavigationProp = StackNavigationProp<MainStackParamList, 'Main'>;
+type MainScreenNavigationProp = StackNavigationProp<MainStackParamList, 'MainTabs'>;
 
 
 
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
       <Text style={styles.pokedexText}> Pokedex</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => (navigation as unknown as MainScreenNavigationProp).navigate('Main')}
+        onPress={() => (navigation as unknown as MainScreenNavigationProp).navigate('MainTabs')}
 
       >
         <Text style={styles.textoBotao}>Iniciar</Text>

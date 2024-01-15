@@ -18,7 +18,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=40&offset=${offset}`);
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
         const data = await response.json();
 
         const formattedData: Pokemon[] = await Promise.all(
@@ -107,10 +107,11 @@ const Main: React.FC = () => {
         A Pokédex é uma ferramenta essencial para treinadores Pokémon, ajudando-os a aprender mais sobre as criaturas que encontram e a completar seus registros Pokémon.
       </Text>
       <Searchbar
-        placeholder="Pesquise Aqui"
+        placeholder="Pesquise por nome ou ID do Pokemon"
         onChangeText={handleSearch}
         value={searchQuery}
         style={styles.searchBar}
+        
       />
       {error ? (
         <Text style={{ color: "red" }}>{error}</Text>
