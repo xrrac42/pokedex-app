@@ -3,14 +3,13 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#f9ffff ',
+      backgroundColor: '#f9ffff',
       alignItems: 'center',
       justifyContent: 'center',
     },
     pokedexText: {
-  
       fontFamily: 'sans-serif',
-      color: '#1d1c21 ',
+      color: '#1d1c21',
       fontSize: 24,
       fontWeight: '500',
       top: 30,
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
       borderRadius: 8,
     },
     textoBotao: {
-      fontFamily: 'Quicksand',
+      fontFamily: 'sans-serif',
       fontWeight: 'bold',
       fontSize: 20,
       color: '#f9ffff',

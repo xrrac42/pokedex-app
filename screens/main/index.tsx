@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, ImageSourcePropType} from "react-native";
 import { Searchbar, Card, Title, Paragraph } from "react-native-paper";
 import styles from "./styles";
 

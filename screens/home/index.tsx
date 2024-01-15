@@ -4,6 +4,7 @@ import {Text, View, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { SvgUri } from 'react-native-svg';
 
 type MainStackParamList = {
   MainTabs: undefined;
@@ -15,7 +16,7 @@ type MainScreenNavigationProp = StackNavigationProp<MainStackParamList, 'MainTab
 
 const Home: React.FC = () => {
   const navigation = useNavigation()
-  const pokeballImageUrl = require('../../assets/pokemon-svgrepo-com.svg');
+  const pokeballImageUrl = require('../../assets/PngItem_1830149.png');
 
 
 
@@ -23,7 +24,7 @@ const Home: React.FC = () => {
     <View style={styles.container}>
 
       <StatusBar style="auto" />
-      <Image source={{ uri: pokeballImageUrl }} style={{ width: 300, height: 300 }} />
+      <Image source={ pokeballImageUrl } style={{ width: 200, height: 200 }} />
       <Text style={styles.pokedexText}> Pokedex</Text>
       <TouchableOpacity
         style={styles.button}

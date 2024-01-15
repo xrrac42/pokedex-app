@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     title: {
   
         fontFamily: 'sans-serif',
-        color: '#1d1c21 ',
+        color: '#1d1c21',
         fontSize: 24,
         fontWeight: '500',
         top: 30,
@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
     description:{
 
         fontFamily: 'sans-serif',
-        color: '#1d1c21 ',
-        
+        color: '#1d1c21',
+
         top: 30,
     },
     container: {
