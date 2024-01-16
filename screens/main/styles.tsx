@@ -9,7 +9,7 @@ const theme = {
     text: '#555', 
     background: '#fff',
     error: 'red',
-    card:  '#ededed', // Cor do Card
+    card:  '#ededed',
   },
 };
 
@@ -56,8 +56,10 @@ const styles = StyleSheet.create({
 
   cardContent: {
     backgroundColor: "#f2f2f2",
+    shadowColor: "none",
     alignItems: 'center',
     justifyContent: "center",
+    borderRadius: 30
   },
 
   cardImage: {
@@ -67,19 +69,21 @@ const styles = StyleSheet.create({
   },
 
 card:{
-backgroundColor: "#f2f2f2"
+  background: "none",
+marginTop:10,
+
 },
   cardPokemon: {
-    bacground: "none",
+    background: "none",
     flex: 1,
     marginHorizontal: 5,
   },
 
-  cardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
+  // cardRow: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  //   marginBottom: 20,
+  // },
 });
 
 export default styles;

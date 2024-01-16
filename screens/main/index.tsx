@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, ImageSourcePropType } from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
 import { Searchbar, Card, Title, Paragraph } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native'; 
 import styles from "./styles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from '@react-navigation/stack';
-import usePokemonDetails from "../../hooks/usePokemonDetails";
+import { capitalize } from "../../utils/utils";
 
 
 
@@ -32,7 +32,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=40&offset=${offset}`);
         const data = await response.json();
 
         const formattedData: Pokemon[] = await Promise.all(
@@ -68,66 +68,43 @@ const Main: React.FC = () => {
   const handlePress = (id: number) => {
     navigation.navigate('PokemonDetail', { id });
   };
+  const handleLoadMore = () => {
+    setOffset((prevOffset) => prevOffset + 40);
+  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setOffset(0);
   };
+  
+  function capitalize(value:string){
+    return value[0].toUpperCase () + value.slice(1)
+  }
 
-  const handleLoadMore = () => {
-    setOffset((prevOffset) => prevOffset + 40);
-  };
-
-  const renderPokemonCards = () => {
-    const rows = [];
-    for (let i = 0; i < pokemonList.length; i += 2) {
-      const row = (
-        <View key={i} style={styles.cardRow}>
-          <View style={styles.cardPokemon}>
-            {pokemonList[i] && (
-              <TouchableOpacity onPress={() => { handlePress(pokemonList[i].id); }}>
-                <Card style={styles.card}>
-                  <Card.Content>
-                    <Image
-                      source={{ uri: pokemonList[i].imageUrl }}
-                      style={{ width: "100%", height: 80, resizeMode: "contain" }}
-                    />
-                    <Title>{pokemonList[i].name}</Title>
-                    <Paragraph>#{pokemonList[i].id}</Paragraph>
-                  </Card.Content>
-                </Card>
-              </TouchableOpacity>
-            )}
-          </View>
-          <View style={styles.cardPokemon}>
-            {pokemonList[i + 1] && (
-              <TouchableOpacity onPress={() => handlePress(pokemonList[i + 1].id)}>
-                <Card style={styles.card}>
-                  <Card.Content>
-                    <Image
-                      source={{ uri: pokemonList[i + 1].imageUrl }}
-                      style={{ width: "100%", height: 80, resizeMode: "contain" }}
-                    />
-                    <Title>{pokemonList[i + 1].name}</Title>
-                    <Paragraph>#{pokemonList[i + 1].id}</Paragraph>
-                  </Card.Content>
-                </Card>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      );
-      rows.push(row);
-    }
-    return rows;
-  };
+  const renderPokemonCard = ({ item }: { item: Pokemon }) => (
+    <View style={styles.cardPokemon}>
+      <TouchableOpacity onPress={() => handlePress(item.id)}>
+        <Card style={styles.card}>
+          <Card.Content style={styles.cardContent}>
+            <Image
+              source={{ uri: item.imageUrl }}
+              style={styles.cardImage}
+              loadingIndicatorSource={{ uri: 'URL_PARA_PLACEHOLDER' }}
+            />
+            <Title>{capitalize(item.name)}</Title>
+            <Paragraph>#{item.id}</Paragraph>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    </View>
+  );
+  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pokedexText}>Pokedex</Text>
+      <Text style={styles.pokedexText}>Pokédex</Text>
       <Text style={styles.descriptionText}>
-        A Pokédex é uma ferramenta essencial para treinadores Pokémon, ajudando-os a aprender mais sobre as criaturas que encontram e a completar seus registros Pokémon.
-      </Text>
+      A Pokédex é uma ferramenta essencial para os treinadores Pokémon, auxiliando-os em sua jornada ao proporcionar informações sobre as criaturas que encontram e ajudando a completar seus registros Pokémon.      </Text>
       <Searchbar
         placeholder="Pesquise por nome ou ID do Pokemon"
         onChangeText={handleSearch}
@@ -137,12 +114,16 @@ const Main: React.FC = () => {
       {error ? (
         <Text style={{ color: "red" }}>{error}</Text>
       ) : (
-        <ScrollView onMomentumScrollEnd={handleLoadMore}>
-          {renderPokemonCards()}
-        </ScrollView>
+        <FlatList
+          data={pokemonList}
+          renderItem={renderPokemonCard}
+          keyExtractor={(item) => item.id.toString()}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          numColumns={2}
+        />
       )}
     </View>
-  
   );
 };
 

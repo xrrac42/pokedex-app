@@ -25,7 +25,7 @@ const Home: React.FC = () => {
 
       <StatusBar style="auto" />
       <Image source={ pokeballImageUrl } style={{ width: 150, height: 150 }} />
-      <Text style={styles.pokedexText}> Pokedex</Text>
+      <Text style={styles.pokedexText}> POKÉDEX</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => (navigation as unknown as MainScreenNavigationProp).navigate('MainTabs')}
