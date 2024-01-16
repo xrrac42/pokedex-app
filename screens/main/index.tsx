@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import { Searchbar, Card, Title, Paragraph } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native'; 
-import styles from "./styles";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { capitalize } from "../../utils/utils";
-
-
-
+import axios from 'axios';
+import styles from "./styles";
+import Promise from 'bluebird';
 
 interface Pokemon {
   id: number;
@@ -20,7 +18,7 @@ type MainStackParamList = {
   PokemonDetail: { id: number };
 }
 
-type  PokemonDetailScreenNavigationProp = StackNavigationProp<MainStackParamList, 'PokemonDetail'>;
+type PokemonDetailScreenNavigationProp = StackNavigationProp<MainStackParamList, 'PokemonDetail'>;
 
 const Main: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -29,17 +27,48 @@ const Main: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const navigation = useNavigation<PokemonDetailScreenNavigationProp>();
 
+  function isDigitString(input: string): boolean {
+    const digitRegex = /^\d+$/;
+    return digitRegex.test(input);
+  }
+
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=40&offset=${offset}`);
-        const data = await response.json();
+        let apiUrl = `https://pokeapi.co/api/v2/pokemon?limit=40&offset=${offset}`;
 
-        const formattedData: Pokemon[] = await Promise.all(
-          data.results.map(async (pokemon: any) => {
+        if (searchQuery) {
+        try {
+            if(isDigitString(searchQuery)){}
+            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${searchQuery}`);
+            const pokemonDetails = response.data;
+
+            const pokemonById: Pokemon = {
+              id: pokemonDetails.id,
+              name: pokemonDetails.name,
+              imageUrl: pokemonDetails.sprites.front_default,
+            };
+
+            setPokemonList([pokemonById]);
+            return;
+          
+
+          }
+          catch(erro){
+            alert("pokemon nao encontrado")
+          }
+         
+        }else { apiUrl = `https://pokeapi.co/api/v2/pokemon?limit=40&offset=${offset}`;
+        }
+
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+
+        if (data.results && data.results.length > 0) {
+          const newPokemonList: (Pokemon | null)[] = await Promise.map(data.results, async (pokemon: any) => {
             try {
-              const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`);
-              const pokemonDetails = await response.json();
+              const response = await axios.get(pokemon.url);
+              const pokemonDetails = response.data;
 
               return {
                 id: pokemonDetails.id,
@@ -47,15 +76,22 @@ const Main: React.FC = () => {
                 imageUrl: pokemonDetails.sprites.front_default,
               };
             } catch (error) {
-              console.error(`Erro ao buscar detalhes do Pokémon ${pokemon.name}:`, error);
-              return null;
+              if (axios.isAxiosError(error) && error.response?.status === 404) {
+                console.warn(`Pokémon não encontrado: ${pokemon.name}`);
+                return null;
+              } else {
+                console.error(`Erro ao buscar detalhes do Pokémon ${pokemon.name}:`, error);
+                return null;
+              }
             }
-          })
-        );
+          });
 
-        const filteredData = formattedData.filter((pokemon) => pokemon !== null);
+          const successfulResults = newPokemonList.filter((result) => result !== null) as Pokemon[];
 
-        setPokemonList((prevList) => [...prevList, ...filteredData]);
+          setPokemonList(successfulResults);
+        } else {
+          setPokemonList([]);
+        }
       } catch (error) {
         console.error("Erro ao buscar dados da API:", error);
         setError("Erro ao buscar dados da API");
@@ -63,11 +99,13 @@ const Main: React.FC = () => {
     };
 
     fetchPokemonData();
-  }, [offset]);
+  }, [offset, searchQuery]);
+  
 
   const handlePress = (id: number) => {
     navigation.navigate('PokemonDetail', { id });
   };
+
   const handleLoadMore = () => {
     setOffset((prevOffset) => prevOffset + 40);
   };
@@ -76,10 +114,6 @@ const Main: React.FC = () => {
     setSearchQuery(query);
     setOffset(0);
   };
-  
-  function capitalize(value:string){
-    return value[0].toUpperCase () + value.slice(1)
-  }
 
   const renderPokemonCard = ({ item }: { item: Pokemon }) => (
     <View style={styles.cardPokemon}>
@@ -89,7 +123,6 @@ const Main: React.FC = () => {
             <Image
               source={{ uri: item.imageUrl }}
               style={styles.cardImage}
-              loadingIndicatorSource={{ uri: 'URL_PARA_PLACEHOLDER' }}
             />
             <Title>{capitalize(item.name)}</Title>
             <Paragraph>#{item.id}</Paragraph>
@@ -98,15 +131,15 @@ const Main: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-  
 
   return (
     <View style={styles.container}>
       <Text style={styles.pokedexText}>Pokédex</Text>
       <Text style={styles.descriptionText}>
-      A Pokédex é uma ferramenta essencial para os treinadores Pokémon, auxiliando-os em sua jornada ao proporcionar informações sobre as criaturas que encontram e ajudando a completar seus registros Pokémon.      </Text>
+        A Pokédex is an essential tool for Pokémon trainers, assisting them on their journey by providing information about the creatures they encounter and helping to complete their Pokémon records.
+      </Text>
       <Searchbar
-        placeholder="Pesquise por nome ou ID do Pokemon"
+        placeholder="Search by Pokemon name or ID"
         onChangeText={handleSearch}
         value={searchQuery}
         style={styles.searchBar}

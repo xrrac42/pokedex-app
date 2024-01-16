@@ -38,9 +38,11 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
+    marginLeft:0,
     marginTop: 10,
     marginBottom: 15,
     borderRadius: 10,
+    
     backgroundColor: theme.colors.card,
   },
 

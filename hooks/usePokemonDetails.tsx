@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const usePokemonDetails = () => {
+const usePokemonFavorites = () => {
   const [pokemonDetails, setPokemonDetails] = useState<string | null>(null);
 
   const saveItem = (id: string) => {
@@ -10,4 +10,4 @@ const usePokemonDetails = () => {
   return { pokemonDetails, saveItem };
 };
 
-export default usePokemonDetails;
+export default usePokemonFavorites;
