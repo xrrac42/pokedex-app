@@ -136,8 +136,7 @@ const Main: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.pokedexText}>Pokédex</Text>
       <Text style={styles.descriptionText}>
-        A Pokédex is an essential tool for Pokémon trainers, assisting them on their journey by providing information about the creatures they encounter and helping to complete their Pokémon records.
-      </Text>
+      A Pokédex é uma ferramenta essencial para treinadores de Pokémon, auxiliando-os em sua jornada ao fornecer informações sobre as criaturas que encontram e ajudando a completar seus registros.      </Text>
       <Searchbar
         placeholder="Search by Pokemon name or ID"
         onChangeText={handleSearch}
