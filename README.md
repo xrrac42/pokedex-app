@@ -1,5 +1,12 @@
 # Pokedex App
 
+![image](https://github.com/xrrac42/pokedex-app/assets/65977793/f8fedc92-197f-460a-8331-bdd9d0bbca75)
+![image](https://github.com/xrrac42/pokedex-app/assets/65977793/163a945b-733f-4daf-a113-f11479d633fb)
+![image](https://github.com/xrrac42/pokedex-app/assets/65977793/84a589e1-66b8-4489-b905-5898f30e7b21)
+![image](https://github.com/xrrac42/pokedex-app/assets/65977793/2d36c0ca-d983-4879-bf38-15d1a4329c67)
+
+
+
 O Pokedex App é uma aplicação desenvolvida em React Native que proporciona uma experiência completa para os entusiastas de Pokémon. Através da integração com a API da Pokedex, o aplicativo permite listar, pesquisar por nome ou ID, adicionar aos favoritos e remover Pokémon da lista de favoritos. O app utiliza armazenamento local do dispositivo para criar uma memória persistente, garantindo que as preferências do usuário sejam mantidas entre sessões.
 
 ## Funcionalidades Principais
